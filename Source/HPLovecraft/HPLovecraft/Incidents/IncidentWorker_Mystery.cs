@@ -8,7 +8,7 @@ namespace HPLovecraft
         protected override bool TryExecuteWorker(IncidentParms parms)
         {
             Settings.DebugString("== Enter IncidentWorker_Mystery ==");
-            float rand = Rand.Value;
+            var rand = Rand.Value;
             //Log.Message(rand.ToString());
             if (rand < 0.3f)
             {
@@ -22,6 +22,7 @@ namespace HPLovecraft
             {
                 LoneSurvivor(parms);
             }
+
             return true;
         }
 
@@ -50,7 +51,6 @@ namespace HPLovecraft
 
         public void SpiderRain(IncidentParms parms)
         {
-
         }
     }
 }

@@ -7,9 +7,15 @@ namespace HPLovecraft
     {
         public override void PawnDied(Corpse corpse)
         {
-            for (int i = 0; i < 3; i++)
+            for (var i = 0; i < 3; i++)
+            {
                 MoteMaker.ThrowAirPuffUp(corpse.PositionHeld.ToVector3(), corpse.Map);
-            if (!corpse.Destroyed) corpse.Destroy(DestroyMode.Vanish);
+            }
+
+            if (!corpse.Destroyed)
+            {
+                corpse.Destroy();
+            }
         }
     }
 }

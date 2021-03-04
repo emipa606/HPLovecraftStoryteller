@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using Verse;
+﻿using Verse;
 
 namespace HPLovecraft
 {
@@ -13,7 +12,9 @@ namespace HPLovecraft
         public static void DebugString(string s)
         {
             if (DEBUG_MODE)
+            {
                 Log.Message(s);
+            }
         }
     }
 }

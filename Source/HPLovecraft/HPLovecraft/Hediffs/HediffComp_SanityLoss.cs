@@ -1,26 +1,26 @@
-﻿using Verse;
+﻿using Cthulhu;
+using Verse;
 
 namespace HPLovecraft
 {
     public class HediffComp_SanityLoss : HediffComp
     {
-
         public override void CompPostTick(ref float severityAdjustment)
         {
-            if (base.Pawn != null)
+            if (Pawn != null)
             {
-                if (base.Pawn.RaceProps != null)
+                if (Pawn.RaceProps != null)
                 {
-                    if (base.Pawn.RaceProps.IsMechanoid)
+                    if (Pawn.RaceProps.IsMechanoid)
                     {
                         MakeSane();
                     }
                 }
             }
 
-            if (Cthulhu.Utility.IsCosmicHorrorsLoaded())
+            if (Utility.IsCosmicHorrorsLoaded())
             {
-                if (base.Pawn.GetType().ToString() == "CosmicHorrorPawn")
+                if (Pawn.GetType().ToString() == "CosmicHorrorPawn")
                 {
                     MakeSane();
                 }
@@ -30,9 +30,8 @@ namespace HPLovecraft
 
         public void MakeSane()
         {
-            this.parent.Severity -= 1f;
-            base.Pawn.health.Notify_HediffChanged(this.parent);
+            parent.Severity -= 1f;
+            Pawn.health.Notify_HediffChanged(parent);
         }
     }
-
 }

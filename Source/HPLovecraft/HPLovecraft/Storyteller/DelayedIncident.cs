@@ -5,23 +5,22 @@ namespace HPLovecraft
 {
     public class DelayedIncident : IExposable
     {
+        public bool didIt;
+        public IncidentDef incident;
+        public IncidentParms incidentParms;
+        public Map map;
         public int ticksUntilIncident = -1;
-        public IncidentDef incident = null;
-        public IncidentParms incidentParms = null;
-        public Map map = null;
-        public bool didIt = false;
 
         public DelayedIncident()
         {
-
         }
 
         public DelayedIncident(DelayedIncident copy)
         {
-            this.ticksUntilIncident = copy.ticksUntilIncident;
-            this.incident = copy.incident;
-            this.incidentParms = copy.incidentParms;
-            this.map = copy.map;
+            ticksUntilIncident = copy.ticksUntilIncident;
+            incident = copy.incident;
+            incidentParms = copy.incidentParms;
+            map = copy.map;
         }
 
         public DelayedIncident(Map newMap, IncidentDef newIncident, IncidentParms newParms, int newTicks)
@@ -32,25 +31,29 @@ namespace HPLovecraft
             ticksUntilIncident = newTicks;
         }
 
+        public void ExposeData()
+        {
+            Scribe_References.Look(ref map, "map");
+            Scribe_Defs.Look(ref incident, "incident");
+            Scribe_Deep.Look(ref incidentParms, "incidentParms");
+            Scribe_Values.Look(ref ticksUntilIncident, "ticksUntilIncident", -1);
+            Scribe_Values.Look(ref didIt, "didIt");
+        }
+
         public void Tick()
         {
-            if (!didIt && Find.TickManager.TicksGame % 1000 == 0) Log.Message(Find.TickManager.TicksGame + " " + ticksUntilIncident);
+            if (!didIt && Find.TickManager.TicksGame % 1000 == 0)
+            {
+                Log.Message(Find.TickManager.TicksGame + " " + ticksUntilIncident);
+            }
+
             if (Find.TickManager.TicksGame % 100 == 0 &&
                 Find.TickManager.TicksGame > ticksUntilIncident &&
                 map.GetComponent<MapComponent_OmenIncidentTracker>() is MapComponent_OmenIncidentTracker tracker)
             {
-                    //Log.Message("IncidentTriggered");
-                    tracker.TriggerIncident(this);
+                //Log.Message("IncidentTriggered");
+                tracker.TriggerIncident(this);
             }
-        }
-
-        public void ExposeData()
-        {
-            Scribe_References.Look(ref this.map, "map");
-            Scribe_Defs.Look(ref this.incident, "incident");
-            Scribe_Deep.Look(ref this.incidentParms, "incidentParms", new object[0]);
-            Scribe_Values.Look(ref this.ticksUntilIncident, "ticksUntilIncident", -1);
-            Scribe_Values.Look(ref this.didIt, "didIt", false);
         }
     }
 }

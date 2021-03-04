@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Cthulhu;
 using RimWorld;
-using Verse;
 using RimWorld.Planet;
+using Verse;
 using Verse.AI;
 
 namespace HPLovecraft
@@ -15,7 +16,7 @@ namespace HPLovecraft
         protected override bool TryExecuteWorker(IncidentParms parms)
         {
             Settings.DebugString("== Enter IncidentWorker_Paranoia ==");
-            float rand = Rand.Value;
+            var rand = Rand.Value;
             if (rand < 0.25f)
             {
                 /*
@@ -27,10 +28,12 @@ namespace HPLovecraft
                  *
                  */
                 Settings.DebugString("Mass Paranoia");
-                if (parms.target is Map map && map.mapPawns.FreeColonistsAndPrisoners is IEnumerable<Pawn> pawns && pawns.Count() > 0)
+                if (parms.target is Map map && map.mapPawns.FreeColonistsAndPrisoners is IEnumerable<Pawn> pawns &&
+                    pawns.Count() > 0)
                 {
                     var difficultyCalc = DIFFICULTYMODIFIER * Find.Storyteller.difficulty.difficulty;
-                    SanityLossReport.ApplySanityLossAndShowReport(new List<Pawn>(pawns), SANITYLOSSRANGE, difficultyCalc);
+                    SanityLossReport.ApplySanityLossAndShowReport(new List<Pawn>(pawns), SANITYLOSSRANGE,
+                        difficultyCalc);
                     //bool socialFightStarted = false;
                     //foreach (Pawn pawn in pawns)
                     //{
@@ -65,11 +68,13 @@ namespace HPLovecraft
                  */
 
                 Settings.DebugString("Single Paranoia");
-                if (parms.target is Map map && map.mapPawns.FreeColonistsAndPrisoners is IEnumerable<Pawn> pawns && pawns.Count() > 0 &&
+                if (parms.target is Map map && map.mapPawns.FreeColonistsAndPrisoners is IEnumerable<Pawn> pawns &&
+                    pawns.Count() > 0 &&
                     pawns.RandomElement() is Pawn pawn)
                 {
                     var difficultyCalc = DIFFICULTYMODIFIER * Find.Storyteller.difficulty.difficulty;
-                    SanityLossReport.ApplySanityLossAndShowReport(new List<Pawn> { pawn }, SANITYLOSSRANGE, difficultyCalc);
+                    SanityLossReport.ApplySanityLossAndShowReport(new List<Pawn> {pawn}, SANITYLOSSRANGE,
+                        difficultyCalc);
                     //if (pawn?.story?.traits?.GetTrait(TraitDefOf.Nerves) is Trait nerves && nerves.Degree > 0)
                     //{
                     //    flavorDesc = "ROM_OmenParanaoiaDesc2b".Translate(pawn);
@@ -97,14 +102,18 @@ namespace HPLovecraft
                  *
                  */
                 Settings.DebugString("Visions");
-                if (parms.target is Map map && map.mapPawns.FreeColonistsAndPrisoners is IEnumerable<Pawn> pawns && pawns.Count() > 0 &&
+                if (parms.target is Map map && map.mapPawns.FreeColonistsAndPrisoners is IEnumerable<Pawn> pawns &&
+                    pawns.Count() > 0 &&
                     pawns.RandomElement() is Pawn pawn)
                 {
                     var difficultyCalc = DIFFICULTYMODIFIER * Find.Storyteller.difficulty.difficulty;
-                    SanityLossReport.ApplySanityLossAndShowReport(new List<Pawn> { pawn }, SANITYLOSSRANGE, difficultyCalc, "HPLovecraft_Vision");
-                    if (Rand.Value > 0.1f && pawns.Count() > 3 && pawn?.mindState?.mentalStateHandler is MentalStateHandler mentalStateHandler)
+                    SanityLossReport.ApplySanityLossAndShowReport(new List<Pawn> {pawn}, SANITYLOSSRANGE,
+                        difficultyCalc, "HPLovecraft_Vision");
+                    if (Rand.Value > 0.1f && pawns.Count() > 3 &&
+                        pawn?.mindState?.mentalStateHandler is MentalStateHandler mentalStateHandler)
                     {
-                        mentalStateHandler.TryStartMentalState(DefDatabase<MentalStateDef>.GetNamed("WanderOwnRoom"), "ROM_OmenParanaoiaResult".Translate());
+                        mentalStateHandler.TryStartMentalState(DefDatabase<MentalStateDef>.GetNamed("WanderOwnRoom"),
+                            "ROM_OmenParanaoiaResult".Translate());
                     }
                 }
             }
@@ -117,27 +126,31 @@ namespace HPLovecraft
                  *
                  */
                 Settings.DebugString("Plagued Senses");
-                if (parms.target is Map map && map.mapPawns.FreeColonists is IEnumerable<Pawn> pawns && pawns.Count() > 0 &&
+                if (parms.target is Map map && map.mapPawns.FreeColonists is IEnumerable<Pawn> pawns &&
+                    pawns.Count() > 0 &&
                     pawns.RandomElement() is Pawn pawn && pawn?.health?.hediffSet is HediffSet parts)
                 {
-                    Cthulhu.Utility.ApplySanityLoss(pawn, Rand.Range(0.3f, 0.5f), 1);
+                    Utility.ApplySanityLoss(pawn, Rand.Range(0.3f, 0.5f));
 
                     var chance = Rand.Value;
-                    var disorientedHediff = HediffMaker.MakeHediff(DefDatabase<HediffDef>.GetNamed("ROM_Disoriented"), pawn);
+                    var disorientedHediff =
+                        HediffMaker.MakeHediff(DefDatabase<HediffDef>.GetNamed("ROM_Disoriented"), pawn);
                     var senseParts = new List<BodyPartRecord>
                     {
-                        Cthulhu.Utility.GetEar(parts),
-                        Cthulhu.Utility.GetEye(parts),
-                        Cthulhu.Utility.GetNose(parts),
-                        Cthulhu.Utility.GetMouth(parts)
+                        Utility.GetEar(parts),
+                        Utility.GetEye(parts),
+                        Utility.GetNose(parts),
+                        Utility.GetMouth(parts)
                     };
                     disorientedHediff.Part = parts.GetNotMissingParts().FirstOrDefault(x => senseParts.Contains(x));
                     disorientedHediff.Severity = Rand.Range(0.7f, 0.9f);
-                    parts.AddDirect(disorientedHediff, null);
+                    parts.AddDirect(disorientedHediff);
                     string flavorDesc = "ROM_OmenParanaoiaDesc4".Translate(pawn);
-                    Find.LetterStack.ReceiveLetter(def.label.CapitalizeFirst(), flavorDesc, DefDatabase<LetterDef>.GetNamed("ROM_Omen"), new GlobalTargetInfo(pawn));
+                    Find.LetterStack.ReceiveLetter(def.label.CapitalizeFirst(), flavorDesc,
+                        DefDatabase<LetterDef>.GetNamed("ROM_Omen"), new GlobalTargetInfo(pawn));
                 }
             }
+
             return true;
         }
     }

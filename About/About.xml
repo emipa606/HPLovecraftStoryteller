@@ -20,43 +20,66 @@
   <loadAfter>
     <li>brrainz.harmony</li>
   </loadAfter>
-  <description>Update of jecrells mod
+  <description>[img]https://i.imgur.com/WAEzk68.png[/img]
+Update of jecrells mod
 https://steamcommunity.com/sharedfiles/filedetails/?id=944669553
-
-[img]https://i.imgur.com/GYswkZ7.png[/img]
-
-Support-chat:
-https://invite.gg/mlie
-
-Non-steam version:
-https://github.com/emipa606/HPLovecraftStoryteller
 
 - This is an unofficial port
 - This will be removed when/if Jecrell comes back
+- Keep comments about the mods function and bugs. Opinions on the subject-matter can be expressed elsewhere.
 
---- Original Description ---
-Adds a foreboding storyteller that adds omens to RimWorld stories.
+[img]https://i.imgur.com/7Gzt3Rg.png[/img]
+
+[table]
+	[tr]
+		[td][url=https://invite.gg/Mlie][img]https://i.imgur.com/zdzzBrc.png[/img][/url][/td]
+		[td][url=https://github.com/emipa606/HPLovecraftStoryteller][img]https://i.imgur.com/kTkpTOE.png[/img][/url][/td]
+	[/tr]
+[/table]
+	
+[img]https://i.imgur.com/NOW7jU1.png[/img]
+
+[h1]Adds a foreboding storyteller that adds omens to RimWorld stories.[/h1]
 
 In this mod, Lovecraft will be added to your list of storytellers. In Lovecraft's tales, protagonists often face their own mortality and insignificance in the universe. Threats to your colony and its sanity will be constant. Can your colony survive a cosmic horror tale?
 
-A Dog Said Patch : Now Included with this mod. No seperate download required.
+[b]A Dog Said Patch : Now Included with this mod. No seperate download required.[/b]
 
-* Features *
-------------
-Rewrites the threat cycle of RimWorld to include "omens."
-Omens are events that precede larger and more horrible events.
-Currently, the mod contains 13 simple omen events with 3 more planned.
-Adds intelligent crows and black cats.
-
+[h1]* Features *
+------------  [/h1]
+[list]
+[*]Rewrites the threat cycle of RimWorld to include "omens."
+[*]Omens are events that precede larger and more horrible events.
+[*]Currently, the mod contains 13 simple omen events with 3 more planned.
+[*]Adds intelligent crows and black cats.
+[img]https://images.discordapp.net/attachments/234622469816844288/323407600798531585/Crow_side.png[/img][img]https://images.discordapp.net/attachments/234622469816844288/323407600853057538/Crow_front.png[/img][img]https://images.discordapp.net/attachments/234622469816844288/323410527613091840/Crow_back.png[/img]
+[/list]
 
 * An example omen, a blood moon, will cause unease among all that see it.
-
+[img]https://i.imgur.com/a0ThejJ.png[/img]
 
 * Black cats can be found as part of the omens, and they are randomly named after famous Weird Fiction authors should they take a liking to your colony.
+[img]https://images.discordapp.net/attachments/231073994248290304/323480523559272458/unknown.png[/img]
+
+  *Note: Storytellers in Rimworld affect your colony's population. This mod uses the default number of colonists. For double population, please refer to the double population edition (coming soon).
+
+  *Remember to spay and nueter your pets! https://steamcommunity.com/sharedfiles/filedetails/?id=902186027
+
+...
+
+[h1]Special thanks to all those that support me on Patreon:[/h1]
+ShotgunFace, Fredric Sundberg, Dan Winn, Toss Antilles, Sarah Banks, Undead Jackel, Michin, Chelsea, Caine Detueur, Yewty Oxman, Jerod Clayton, Arty Kubin, Ashleigh Miller, infinity421, TheDayDude, Jacob Duga, Ryan Brock, Evan Hwang, Moshat, Christopher, Don Butterblume, John Boehr, George Chong Chuang Ming, Oliver White, Helpful Bot, vincent de keijzer, roxxploxx, Legless, Christopher Abel, Karol Rybak, Mathias Broxvall, Mark, Tim Stillson, Lachlan Easton, Nemuri Hime, Sera, Christian Hermansen, NiNe Bottles of Rum, Populous25, Steven James, Marcus Siraenu, Michael Lauder, meatface.
 
 
-*Note: Storytellers in Rimworld affect your colony's population. This mod uses the default number of colonists. For double population, please refer to the double population edition (coming soon).
-
-*Remember to spay and nueter your pets! https://steamcommunity.com/sharedfiles/filedetails/?id=902186027
+[img]https://i.imgur.com/Rs6T6cr.png[/img]
+[list]
+[*] See if the the error persists if you just have this mod and its requirements active.
+[*] If not, try adding your other mods until it happens again.
+[*] Post your error-log using [url=https://steamcommunity.com/workshop/filedetails/?id=818773962]HugsLib[/url] and command Ctrl+F12
+[*] For best support, please use the Discord-channel for error-reporting.
+[*] Do not report errors by making a discussion-thread, I get no notification of that.
+[*] If you have the solution for a problem, please post it to the GitHub repository.
+[/list]
 </description>
 </ModMetaData>
+

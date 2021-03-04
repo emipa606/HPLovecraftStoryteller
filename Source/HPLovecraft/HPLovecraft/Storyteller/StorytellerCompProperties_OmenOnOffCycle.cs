@@ -1,69 +1,73 @@
 ﻿// RimWorld.StorytellerCompProperties_OnOffCycle
-using RimWorld;
+
 using System.Collections.Generic;
+using RimWorld;
 using Verse;
 
 namespace HPLovecraft
 {
-	public class StorytellerCompProperties_OmenOnOffCycle : StorytellerCompProperties
-	{
-		public float onDays;
+    public class StorytellerCompProperties_OmenOnOffCycle : StorytellerCompProperties
+    {
+        private readonly IncidentCategoryDef category;
 
-		public float offDays;
+        public SimpleCurve acceptFractionByDaysPassedCurve;
 
-		public float minSpacingDays;
+        public SimpleCurve acceptPercentFactorPerThreatPointsCurve;
 
-		public FloatRange numIncidentsRange = FloatRange.Zero;
+        public int cosmicHorrorRaidPercentage;
 
-		public SimpleCurve acceptFractionByDaysPassedCurve;
+        public float forceCosmicHorrorRaidBeforeDaysPassed;
 
-		public SimpleCurve acceptPercentFactorPerThreatPointsCurve;
+        public float forceRaidEnemyBeforeDaysPassed;
 
-		public IncidentDef incident;
+        public IncidentDef incident;
 
-		private readonly IncidentCategoryDef category;
+        public float minSpacingDays;
 
-		public int cosmicHorrorRaidPercentage;
+        public FloatRange numIncidentsRange = FloatRange.Zero;
 
-		public float forceCosmicHorrorRaidBeforeDaysPassed;
+        public float offDays;
+        public float onDays;
 
-		public float forceRaidEnemyBeforeDaysPassed;
+        public StorytellerCompProperties_OmenOnOffCycle()
+        {
+            compClass = typeof(StorytellerComp_OmenOnOffCycle);
+        }
 
-		public IncidentCategoryDef IncidentCategory
-		{
-			get
-			{
-				if (incident != null)
-				{
-					return incident.category;
-				}
-				return category;
-			}
-		}
+        public IncidentCategoryDef IncidentCategory
+        {
+            get
+            {
+                if (incident != null)
+                {
+                    return incident.category;
+                }
 
-		public StorytellerCompProperties_OmenOnOffCycle()
-		{
-			compClass = typeof(StorytellerComp_OmenOnOffCycle);
-		}
+                return category;
+            }
+        }
 
-		public override IEnumerable<string> ConfigErrors(StorytellerDef parentDef)
-		{
-			if (incident != null && category != null)
-			{
-				yield return "incident and category should not both be defined";
-			}
-			if (onDays <= 0f)
-			{
-				yield return "onDays must be above zero";
-			}
-			if (numIncidentsRange.TrueMax <= 0f)
-			{
-				yield return "numIncidentRange not configured";
-			}
-			if (minSpacingDays * numIncidentsRange.TrueMax > onDays * 0.9f)
-			{
-				yield return "minSpacingDays too high compared to max number of incidents.";
-			}
-		}
-	}
+        public override IEnumerable<string> ConfigErrors(StorytellerDef parentDef)
+        {
+            if (incident != null && category != null)
+            {
+                yield return "incident and category should not both be defined";
+            }
+
+            if (onDays <= 0f)
+            {
+                yield return "onDays must be above zero";
+            }
+
+            if (numIncidentsRange.TrueMax <= 0f)
+            {
+                yield return "numIncidentRange not configured";
+            }
+
+            if (minSpacingDays * numIncidentsRange.TrueMax > onDays * 0.9f)
+            {
+                yield return "minSpacingDays too high compared to max number of incidents.";
+            }
+        }
+    }
 }

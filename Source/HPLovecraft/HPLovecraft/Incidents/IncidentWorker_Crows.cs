@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
-using Verse;
 using RimWorld.Planet;
+using Verse;
 
 namespace HPLovecraft
 {
@@ -10,12 +10,11 @@ namespace HPLovecraft
     {
         protected override bool TryExecuteWorker(IncidentParms parms)
         {
-
             Settings.DebugString("== Enter IncidentWorker_Crows ==");
-            string flavorDesc = "";
+            var flavorDesc = "";
             Thing crow = null;
-            float rand = Rand.Value;
-            GlobalTargetInfo target = new GlobalTargetInfo();
+            var rand = Rand.Value;
+            var target = new GlobalTargetInfo();
             if (rand < 0.25f)
             {
                 /*
@@ -25,12 +24,13 @@ namespace HPLovecraft
                  * 
                  */
                 Settings.DebugString("Dead Crow");
-                RCellFinder.TryFindRandomPawnEntryCell(out IntVec3 loc, (Map)parms.target, CellFinder.EdgeRoadChance_Animal, false, null);
-                Pawn newThing = PawnGenerator.GeneratePawn(HPLDefOf.HPLovecraft_CrowKind, null);
-                crow = GenSpawn.Spawn(newThing, loc, (Map)parms.target);
-                ((Pawn)crow).Kill(null);
+                RCellFinder.TryFindRandomPawnEntryCell(out var loc, (Map) parms.target,
+                    CellFinder.EdgeRoadChance_Animal);
+                var newThing = PawnGenerator.GeneratePawn(HPLDefOf.HPLovecraft_CrowKind);
+                crow = GenSpawn.Spawn(newThing, loc, (Map) parms.target);
+                ((Pawn) crow).Kill(null);
                 flavorDesc = "ROM_OmenCatDesc1".Translate();
-                target = new GlobalTargetInfo(loc, (Map)parms.target);
+                target = new GlobalTargetInfo(loc, (Map) parms.target);
             }
             else if (rand < 0.5f)
             {
@@ -42,17 +42,19 @@ namespace HPLovecraft
                  * 
                  */
                 Settings.DebugString("Murder of Crows");
-                RCellFinder.TryFindRandomPawnEntryCell(out IntVec3 loc, (Map)parms.target, CellFinder.EdgeRoadChance_Animal, false, null);
-                var newThing = PawnGenerator.GeneratePawn(HPLDefOf.HPLovecraft_CrowKind, null);
-                crow = GenSpawn.Spawn(newThing, loc, (Map)parms.target);
-                List<Thing> crows = new List<Thing>();
-                for (int i = 0; i < 2; i++)
+                RCellFinder.TryFindRandomPawnEntryCell(out var loc, (Map) parms.target,
+                    CellFinder.EdgeRoadChance_Animal);
+                var newThing = PawnGenerator.GeneratePawn(HPLDefOf.HPLovecraft_CrowKind);
+                crow = GenSpawn.Spawn(newThing, loc, (Map) parms.target);
+                var crows = new List<Thing>();
+                for (var i = 0; i < 2; i++)
                 {
-                    Pawn newCrow = PawnGenerator.GeneratePawn(HPLDefOf.HPLovecraft_CrowKind, null);
-                    crows.Add(GenSpawn.Spawn(newCrow, loc, (Map)parms.target));
+                    var newCrow = PawnGenerator.GeneratePawn(HPLDefOf.HPLovecraft_CrowKind);
+                    crows.Add(GenSpawn.Spawn(newCrow, loc, (Map) parms.target));
                 }
+
                 crows.Add(crow);
-                crow.Kill(null);
+                crow.Kill();
                 flavorDesc = "ROM_OmenCrowDesc1".Translate();
                 target = new GlobalTargetInfo(crows.FirstOrDefault(x => x is Pawn y && !y.Dead));
             }
@@ -65,15 +67,17 @@ namespace HPLovecraft
                  * 
                  */
                 Settings.DebugString("Flock of Crows");
-                RCellFinder.TryFindRandomPawnEntryCell(out IntVec3 loc, (Map)parms.target, CellFinder.EdgeRoadChance_Animal, false, null);
-                Pawn newThing = PawnGenerator.GeneratePawn(HPLDefOf.HPLovecraft_CrowKind, null);
-                crow = GenSpawn.Spawn(newThing, loc, (Map)parms.target);
-                List<Thing> crows = new List<Thing>();
-                for (int i = 0; i < 2; i++)
+                RCellFinder.TryFindRandomPawnEntryCell(out var loc, (Map) parms.target,
+                    CellFinder.EdgeRoadChance_Animal);
+                var newThing = PawnGenerator.GeneratePawn(HPLDefOf.HPLovecraft_CrowKind);
+                crow = GenSpawn.Spawn(newThing, loc, (Map) parms.target);
+                var crows = new List<Thing>();
+                for (var i = 0; i < 2; i++)
                 {
-                    Pawn newCrow = PawnGenerator.GeneratePawn(HPLDefOf.HPLovecraft_CrowKind, null);
-                    crows.Add(GenSpawn.Spawn(newCrow, loc, (Map)parms.target));
+                    var newCrow = PawnGenerator.GeneratePawn(HPLDefOf.HPLovecraft_CrowKind);
+                    crows.Add(GenSpawn.Spawn(newCrow, loc, (Map) parms.target));
                 }
+
                 crows.Add(crow);
                 flavorDesc = "ROM_OmenCrowDesc2".Translate();
                 target = new GlobalTargetInfo(crow);
@@ -87,13 +91,16 @@ namespace HPLovecraft
                  *
                  */
                 Settings.DebugString("Solitary Crow");
-                RCellFinder.TryFindRandomPawnEntryCell(out IntVec3 loc, (Map)parms.target, CellFinder.EdgeRoadChance_Animal, false, null);
-                Pawn newThing = PawnGenerator.GeneratePawn(HPLDefOf.HPLovecraft_CrowKind, null);
-                crow = GenSpawn.Spawn(newThing, loc, (Map)parms.target);
+                RCellFinder.TryFindRandomPawnEntryCell(out var loc, (Map) parms.target,
+                    CellFinder.EdgeRoadChance_Animal);
+                var newThing = PawnGenerator.GeneratePawn(HPLDefOf.HPLovecraft_CrowKind);
+                crow = GenSpawn.Spawn(newThing, loc, (Map) parms.target);
                 flavorDesc = "ROM_OmenCrowDesc3".Translate();
                 target = new GlobalTargetInfo(crow);
             }
-            Find.LetterStack.ReceiveLetter(def.label.CapitalizeFirst(), flavorDesc, DefDatabase<LetterDef>.GetNamed("ROM_Omen"), target);
+
+            Find.LetterStack.ReceiveLetter(def.label.CapitalizeFirst(), flavorDesc,
+                DefDatabase<LetterDef>.GetNamed("ROM_Omen"), target);
             return true;
         }
     }

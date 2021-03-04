@@ -1,28 +1,13 @@
 ﻿using System.Collections.Generic;
-using Verse;
 using RimWorld;
+using Verse;
 
 namespace HPLovecraft
 {
     public class GameCondition_TheMist : GameCondition
     {
+        private int ticksInFog;
         //private static int interval = 3451;
-
-        public GameCondition_TheMist()
-        {
-            /*
-            ColorInt colorInt = new ColorInt(216, 255, 0);
-            Color arg_50_0 = colorInt.ToColor;
-            ColorInt colorInt2 = new ColorInt(234, 200, 255);
-            this.ToxicFalloutColors = new SkyColorSet(arg_50_0, colorInt2.ToColor, new Color(0.6f, 0.8f, 0.5f), 0.85f);
-                    
-            this.overlays = new List<SkyOverlay>
-            {
-                new WeatherOverlay_Fog()
-            };
-            */
-            //base.Map.weatherManager.TransitionTo(HPLDefOf.Fog);
-        }
 
         public override void Init()
         {
@@ -36,39 +21,59 @@ namespace HPLovecraft
             foreach (var map in AffectedMaps)
             {
                 var pawnGroup = map?.mapPawns?.AllPawnsSpawned?.FindAll(x => x is PawnMistCreature);
-                if (pawnGroup?.Count > 0) mistCreatures.AddRange(pawnGroup);
+                if (pawnGroup?.Count > 0)
+                {
+                    mistCreatures.AddRange(pawnGroup);
+                }
             }
-            if (mistCreatures?.Count > 0) foreach (Pawn p in mistCreatures) p.Kill(null);
+
+            if (mistCreatures?.Count > 0)
+            {
+                foreach (var p in mistCreatures)
+                {
+                    p.Kill(null);
+                }
+            }
+
             base.End();
         }
-
-        int ticksInFog;
 
         public override void GameConditionTick()
         {
             //Keep it fogged!
             ticksInFog++;
-            if (ticksInFog % 1000 != 0) return;
-            if (!(AffectedMaps?.Count > 0)) return;
+            if (ticksInFog % 1000 != 0)
+            {
+                return;
+            }
+
+            if (!(AffectedMaps?.Count > 0))
+            {
+                return;
+            }
+
             foreach (var map in AffectedMaps)
             {
-                if (map.weatherManager.curWeather != HPLDefOf.Fog) map.weatherManager.TransitionTo(HPLDefOf.Fog);
-
-                int maxMistCreatureCount = (int) ((map.mapPawns.ColonistCount * 4) * (((float) map.Size.x) / 250f));
-                int curMistCreatureCount = map.mapPawns.AllPawnsSpawned.FindAll(x => x is PawnMistCreature).Count;
-
-                IntVec3 spawnLoc = map.Center.RandomAdjacentCell8Way();
-                int i = 100;
-                while ((curMistCreatureCount < maxMistCreatureCount) && i > 0)
+                if (map.weatherManager.curWeather != HPLDefOf.Fog)
                 {
-                    
+                    map.weatherManager.TransitionTo(HPLDefOf.Fog);
+                }
+
+                var maxMistCreatureCount = (int) (map.mapPawns.ColonistCount * 4 * (map.Size.x / 250f));
+                var curMistCreatureCount = map.mapPawns.AllPawnsSpawned.FindAll(x => x is PawnMistCreature).Count;
+
+                var spawnLoc = map.Center.RandomAdjacentCell8Way();
+                var i = 100;
+                while (curMistCreatureCount < maxMistCreatureCount && i > 0)
+                {
                     CellFinder.TryFindRandomCellNear(map.Center, map, 60,
-                        (IntVec3 c) => c.Standable(map) && !map.roofGrid.Roofed(c) && map.reachability.CanReachColony(c), out spawnLoc, 100);
-                    PawnKindDef randomKind = (Rand.Value > 0.3f)
+                        c => c.Standable(map) && !map.roofGrid.Roofed(c) && map.reachability.CanReachColony(c),
+                        out spawnLoc, 100);
+                    var randomKind = Rand.Value > 0.3f
                         ? HPLDefOf.HPLovecraft_MistStalker
                         : HPLDefOf.HPLovecraft_MistStalkerTwo;
-                    Pawn newThing = PawnGenerator.GeneratePawn(randomKind, null);
-                    Thing stalker = GenSpawn.Spawn(newThing, spawnLoc, map);
+                    var newThing = PawnGenerator.GeneratePawn(randomKind);
+                    var stalker = GenSpawn.Spawn(newThing, spawnLoc, map);
                     i--;
                 }
             }
