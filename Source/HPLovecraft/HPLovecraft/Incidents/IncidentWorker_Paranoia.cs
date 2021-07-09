@@ -4,7 +4,6 @@ using Cthulhu;
 using RimWorld;
 using RimWorld.Planet;
 using Verse;
-using Verse.AI;
 
 namespace HPLovecraft
 {
@@ -28,33 +27,35 @@ namespace HPLovecraft
                  *
                  */
                 Settings.DebugString("Mass Paranoia");
-                if (parms.target is Map map && map.mapPawns.FreeColonistsAndPrisoners is IEnumerable<Pawn> pawns &&
-                    pawns.Count() > 0)
+                if (parms.target is not Map map ||
+                    map.mapPawns.FreeColonistsAndPrisoners is not IEnumerable<Pawn> pawns || !pawns.Any())
                 {
-                    var difficultyCalc = DIFFICULTYMODIFIER * Find.Storyteller.difficulty.difficulty;
-                    SanityLossReport.ApplySanityLossAndShowReport(new List<Pawn>(pawns), SANITYLOSSRANGE,
-                        difficultyCalc);
-                    //bool socialFightStarted = false;
-                    //foreach (Pawn pawn in pawns)
-                    //{
-                    //    if (pawn?.story?.traits?.GetTrait(TraitDefOf.Nerves) is Trait nerves && nerves.Degree > 0)
-                    //    {
-                    //        continue;
-                    //    }
-                    //    Cthulhu.Utility.ApplySanityLoss(pawn, Rand.Range(0.3f, 0.7f), 1);
-
-                    //    if (!socialFightStarted && !pawn.IsPrisoner && Rand.Value > 0.9f && pawn?.mindState?.mentalStateHandler is MentalStateHandler mentalStateHandler)
-                    //    {
-                    //        socialFightStarted = true;
-                    //        var otherPawn = pawns.FirstOrDefault(x => x != pawn && !x.IsPrisoner);
-                    //        if (otherPawn != null && otherPawn?.mindState?.mentalStateHandler is MentalStateHandler otherMind)
-                    //        {
-                    //            mentalStateHandler.TryStartMentalState(MentalStateDefOf.SocialFighting, "ROM_OmenParanaoiaResult".Translate(), false, false, otherPawn);
-                    //            otherMind.TryStartMentalState(MentalStateDefOf.SocialFighting, "ROM_OmenParanaoiaResult".Translate(), false, false, pawn);
-                    //        }
-                    //    }
-                    //}
+                    return true;
                 }
+
+                var difficultyCalc = DIFFICULTYMODIFIER * Find.Storyteller.difficulty.threatScale;
+                SanityLossReport.ApplySanityLossAndShowReport(new List<Pawn>(pawns), SANITYLOSSRANGE,
+                    difficultyCalc);
+                //bool socialFightStarted = false;
+                //foreach (Pawn pawn in pawns)
+                //{
+                //    if (pawn?.story?.traits?.GetTrait(TraitDefOf.Nerves) is Trait nerves && nerves.Degree > 0)
+                //    {
+                //        continue;
+                //    }
+                //    Cthulhu.Utility.ApplySanityLoss(pawn, Rand.Range(0.3f, 0.7f), 1);
+
+                //    if (!socialFightStarted && !pawn.IsPrisoner && Rand.Value > 0.9f && pawn?.mindState?.mentalStateHandler is MentalStateHandler mentalStateHandler)
+                //    {
+                //        socialFightStarted = true;
+                //        var otherPawn = pawns.FirstOrDefault(x => x != pawn && !x.IsPrisoner);
+                //        if (otherPawn != null && otherPawn?.mindState?.mentalStateHandler is MentalStateHandler otherMind)
+                //        {
+                //            mentalStateHandler.TryStartMentalState(MentalStateDefOf.SocialFighting, "ROM_OmenParanaoiaResult".Translate(), false, false, otherPawn);
+                //            otherMind.TryStartMentalState(MentalStateDefOf.SocialFighting, "ROM_OmenParanaoiaResult".Translate(), false, false, pawn);
+                //        }
+                //    }
+                //}
             }
             else if (rand < 0.5f)
             {
@@ -68,29 +69,31 @@ namespace HPLovecraft
                  */
 
                 Settings.DebugString("Single Paranoia");
-                if (parms.target is Map map && map.mapPawns.FreeColonistsAndPrisoners is IEnumerable<Pawn> pawns &&
-                    pawns.Count() > 0 &&
-                    pawns.RandomElement() is Pawn pawn)
+                if (parms.target is not Map map ||
+                    map.mapPawns.FreeColonistsAndPrisoners is not IEnumerable<Pawn> pawns || !pawns.Any() ||
+                    pawns.RandomElement() is not { } pawn)
                 {
-                    var difficultyCalc = DIFFICULTYMODIFIER * Find.Storyteller.difficulty.difficulty;
-                    SanityLossReport.ApplySanityLossAndShowReport(new List<Pawn> {pawn}, SANITYLOSSRANGE,
-                        difficultyCalc);
-                    //if (pawn?.story?.traits?.GetTrait(TraitDefOf.Nerves) is Trait nerves && nerves.Degree > 0)
-                    //{
-                    //    flavorDesc = "ROM_OmenParanaoiaDesc2b".Translate(pawn);
-                    //}
-                    //else
-                    //{
-                    //    Cthulhu.Utility.ApplySanityLoss(pawn, Rand.Range(0.7f, 0.9f), 1);
-
-                    //    if (Rand.Value > 0.2f && pawn?.mindState?.mentalStateHandler is MentalStateHandler mentalStateHandler)
-                    //    {
-                    //        if (pawn.IsPrisoner) mentalStateHandler.TryStartMentalState(MentalStateDefOf.Berserk, "ROM_OmenParanaoiaResult".Translate());
-                    //        else mentalStateHandler.TryStartMentalState(MentalStateDefOf.Wander_Psychotic, "ROM_OmenParanaoiaResult".Translate());
-                    //    }
-                    //    flavorDesc = "ROM_OmenParanaoiaDesc2".Translate(pawn);
-                    //}
+                    return true;
                 }
+
+                var difficultyCalc = DIFFICULTYMODIFIER * Find.Storyteller.difficulty.threatScale;
+                SanityLossReport.ApplySanityLossAndShowReport(new List<Pawn> {pawn}, SANITYLOSSRANGE,
+                    difficultyCalc);
+                //if (pawn?.story?.traits?.GetTrait(TraitDefOf.Nerves) is Trait nerves && nerves.Degree > 0)
+                //{
+                //    flavorDesc = "ROM_OmenParanaoiaDesc2b".Translate(pawn);
+                //}
+                //else
+                //{
+                //    Cthulhu.Utility.ApplySanityLoss(pawn, Rand.Range(0.7f, 0.9f), 1);
+
+                //    if (Rand.Value > 0.2f && pawn?.mindState?.mentalStateHandler is MentalStateHandler mentalStateHandler)
+                //    {
+                //        if (pawn.IsPrisoner) mentalStateHandler.TryStartMentalState(MentalStateDefOf.Berserk, "ROM_OmenParanaoiaResult".Translate());
+                //        else mentalStateHandler.TryStartMentalState(MentalStateDefOf.Wander_Psychotic, "ROM_OmenParanaoiaResult".Translate());
+                //    }
+                //    flavorDesc = "ROM_OmenParanaoiaDesc2".Translate(pawn);
+                //}
             }
             else if (rand < 0.75f)
             {
@@ -102,19 +105,21 @@ namespace HPLovecraft
                  *
                  */
                 Settings.DebugString("Visions");
-                if (parms.target is Map map && map.mapPawns.FreeColonistsAndPrisoners is IEnumerable<Pawn> pawns &&
-                    pawns.Count() > 0 &&
-                    pawns.RandomElement() is Pawn pawn)
+                if (parms.target is not Map map ||
+                    map.mapPawns.FreeColonistsAndPrisoners is not IEnumerable<Pawn> pawns || !pawns.Any() ||
+                    pawns.RandomElement() is not { } pawn)
                 {
-                    var difficultyCalc = DIFFICULTYMODIFIER * Find.Storyteller.difficulty.difficulty;
-                    SanityLossReport.ApplySanityLossAndShowReport(new List<Pawn> {pawn}, SANITYLOSSRANGE,
-                        difficultyCalc, "HPLovecraft_Vision");
-                    if (Rand.Value > 0.1f && pawns.Count() > 3 &&
-                        pawn?.mindState?.mentalStateHandler is MentalStateHandler mentalStateHandler)
-                    {
-                        mentalStateHandler.TryStartMentalState(DefDatabase<MentalStateDef>.GetNamed("WanderOwnRoom"),
-                            "ROM_OmenParanaoiaResult".Translate());
-                    }
+                    return true;
+                }
+
+                var difficultyCalc = DIFFICULTYMODIFIER * Find.Storyteller.difficulty.threatScale;
+                SanityLossReport.ApplySanityLossAndShowReport(new List<Pawn> {pawn}, SANITYLOSSRANGE,
+                    difficultyCalc, "HPLovecraft_Vision");
+                if (Rand.Value > 0.1f && pawns.Count() > 3 &&
+                    pawn.mindState?.mentalStateHandler is { } mentalStateHandler)
+                {
+                    mentalStateHandler.TryStartMentalState(DefDatabase<MentalStateDef>.GetNamed("WanderOwnRoom"),
+                        "ROM_OmenParanaoiaResult".Translate());
                 }
             }
             else
@@ -126,29 +131,31 @@ namespace HPLovecraft
                  *
                  */
                 Settings.DebugString("Plagued Senses");
-                if (parms.target is Map map && map.mapPawns.FreeColonists is IEnumerable<Pawn> pawns &&
-                    pawns.Count() > 0 &&
-                    pawns.RandomElement() is Pawn pawn && pawn?.health?.hediffSet is HediffSet parts)
+                if (parms.target is not Map map || map.mapPawns.FreeColonists is not IEnumerable<Pawn> pawns ||
+                    !pawns.Any() || pawns.RandomElement() is not { } pawn ||
+                    pawn.health?.hediffSet is not { } parts)
                 {
-                    Utility.ApplySanityLoss(pawn, Rand.Range(0.3f, 0.5f));
-
-                    var chance = Rand.Value;
-                    var disorientedHediff =
-                        HediffMaker.MakeHediff(DefDatabase<HediffDef>.GetNamed("ROM_Disoriented"), pawn);
-                    var senseParts = new List<BodyPartRecord>
-                    {
-                        Utility.GetEar(parts),
-                        Utility.GetEye(parts),
-                        Utility.GetNose(parts),
-                        Utility.GetMouth(parts)
-                    };
-                    disorientedHediff.Part = parts.GetNotMissingParts().FirstOrDefault(x => senseParts.Contains(x));
-                    disorientedHediff.Severity = Rand.Range(0.7f, 0.9f);
-                    parts.AddDirect(disorientedHediff);
-                    string flavorDesc = "ROM_OmenParanaoiaDesc4".Translate(pawn);
-                    Find.LetterStack.ReceiveLetter(def.label.CapitalizeFirst(), flavorDesc,
-                        DefDatabase<LetterDef>.GetNamed("ROM_Omen"), new GlobalTargetInfo(pawn));
+                    return true;
                 }
+
+                Utility.ApplySanityLoss(pawn, Rand.Range(0.3f, 0.5f));
+
+                var unused = Rand.Value;
+                var disorientedHediff =
+                    HediffMaker.MakeHediff(DefDatabase<HediffDef>.GetNamed("ROM_Disoriented"), pawn);
+                var senseParts = new List<BodyPartRecord>
+                {
+                    Utility.GetEar(parts),
+                    Utility.GetEye(parts),
+                    Utility.GetNose(parts),
+                    Utility.GetMouth(parts)
+                };
+                disorientedHediff.Part = parts.GetNotMissingParts().FirstOrDefault(x => senseParts.Contains(x));
+                disorientedHediff.Severity = Rand.Range(0.7f, 0.9f);
+                parts.AddDirect(disorientedHediff);
+                string flavorDesc = "ROM_OmenParanaoiaDesc4".Translate(pawn);
+                Find.LetterStack.ReceiveLetter(def.label.CapitalizeFirst(), flavorDesc,
+                    DefDatabase<LetterDef>.GetNamed("ROM_Omen"), new GlobalTargetInfo(pawn));
             }
 
             return true;

@@ -49,7 +49,7 @@ namespace HPLovecraft
 
             if (Find.TickManager.TicksGame % 100 == 0 &&
                 Find.TickManager.TicksGame > ticksUntilIncident &&
-                map.GetComponent<MapComponent_OmenIncidentTracker>() is MapComponent_OmenIncidentTracker tracker)
+                map.GetComponent<MapComponent_OmenIncidentTracker>() is { } tracker)
             {
                 //Log.Message("IncidentTriggered");
                 tracker.TriggerIncident(this);

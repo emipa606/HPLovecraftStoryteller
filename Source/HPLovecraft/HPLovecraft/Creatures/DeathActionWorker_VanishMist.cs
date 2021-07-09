@@ -9,7 +9,7 @@ namespace HPLovecraft
         {
             for (var i = 0; i < 3; i++)
             {
-                MoteMaker.ThrowAirPuffUp(corpse.PositionHeld.ToVector3(), corpse.Map);
+                FleckMaker.ThrowAirPuffUp(corpse.PositionHeld.ToVector3(), corpse.Map);
             }
 
             if (!corpse.Destroyed)

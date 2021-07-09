@@ -27,7 +27,7 @@ namespace HPLovecraft
                 }
             }
 
-            if (mistCreatures?.Count > 0)
+            if (mistCreatures.Count > 0)
             {
                 foreach (var p in mistCreatures)
                 {
@@ -62,18 +62,17 @@ namespace HPLovecraft
                 var maxMistCreatureCount = (int) (map.mapPawns.ColonistCount * 4 * (map.Size.x / 250f));
                 var curMistCreatureCount = map.mapPawns.AllPawnsSpawned.FindAll(x => x is PawnMistCreature).Count;
 
-                var spawnLoc = map.Center.RandomAdjacentCell8Way();
                 var i = 100;
                 while (curMistCreatureCount < maxMistCreatureCount && i > 0)
                 {
                     CellFinder.TryFindRandomCellNear(map.Center, map, 60,
                         c => c.Standable(map) && !map.roofGrid.Roofed(c) && map.reachability.CanReachColony(c),
-                        out spawnLoc, 100);
+                        out var spawnLoc, 100);
                     var randomKind = Rand.Value > 0.3f
                         ? HPLDefOf.HPLovecraft_MistStalker
                         : HPLDefOf.HPLovecraft_MistStalkerTwo;
                     var newThing = PawnGenerator.GeneratePawn(randomKind);
-                    var stalker = GenSpawn.Spawn(newThing, spawnLoc, map);
+                    var unused = GenSpawn.Spawn(newThing, spawnLoc, map);
                     i--;
                 }
             }

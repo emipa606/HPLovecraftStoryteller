@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
 using Verse;
@@ -43,8 +42,9 @@ namespace HPLovecraft
                     delayedIncident.incidentParms.target.StoryState.Notify_IncidentFired(
                         new FiringIncident(delayedIncident.incident, omenCycle, delayedIncident.incidentParms));
                 }
-                catch (Exception)
+                catch
                 {
+                    // ignored
                 }
             }
 
@@ -55,19 +55,21 @@ namespace HPLovecraft
         public override void MapComponentTick()
         {
             base.MapComponentTick();
-            if (delayedIncidents != null && delayedIncidents.Count > 0)
+            if (delayedIncidents == null || delayedIncidents.Count <= 0)
             {
-                var tempIncidents = new List<DelayedIncident>(delayedIncidents);
-                foreach (var delayedIncident in tempIncidents)
+                return;
+            }
+
+            var tempIncidents = new List<DelayedIncident>(delayedIncidents);
+            foreach (var delayedIncident in tempIncidents)
+            {
+                if (!delayedIncident.didIt)
                 {
-                    if (!delayedIncident.didIt)
-                    {
-                        delayedIncident.Tick();
-                    }
-                    else
-                    {
-                        delayedIncidents.Remove(delayedIncident);
-                    }
+                    delayedIncident.Tick();
+                }
+                else
+                {
+                    delayedIncidents.Remove(delayedIncident);
                 }
             }
         }

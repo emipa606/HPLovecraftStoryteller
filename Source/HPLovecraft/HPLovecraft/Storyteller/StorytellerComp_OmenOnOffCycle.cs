@@ -34,11 +34,13 @@ namespace HPLovecraft
             for (var i = 0; i < incCount; i++)
             {
                 var firingIncident = GenerateIncident(target);
-                if (firingIncident != null)
+                if (firingIncident == null)
                 {
-                    Settings.DebugString($"Make Incident: {firingIncident.def.defName}");
-                    yield return firingIncident;
+                    continue;
                 }
+
+                Settings.DebugString($"Make Incident: {firingIncident.def.defName}");
+                yield return firingIncident;
             }
 
             //Settings.DebugString("== Exit StorytellerComp_OmenOnOffCycle.MakeIntervalIncidents ==");

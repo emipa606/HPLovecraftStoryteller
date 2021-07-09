@@ -60,22 +60,7 @@ namespace HPLovecraft
                 }
             }
 
-            if (pawn1.needs == null)
-            {
-                return false;
-            }
-
-            if (pawn1.needs.mood == null)
-            {
-                return false;
-            }
-
-            if (pawn1.needs.mood.thoughts == null)
-            {
-                return false;
-            }
-
-            if (pawn1.needs.mood.thoughts.memories == null)
+            if (pawn1.needs?.mood?.thoughts?.memories == null)
             {
                 return false;
             }
@@ -86,49 +71,57 @@ namespace HPLovecraft
         public override void TickRare()
         {
             base.TickRare();
-            if (Spawned && !Dead && !Destroyed)
+            if (!Spawned || Dead || Destroyed)
             {
-                ObservationEffect();
-                DissipateCheck();
+                return;
             }
+
+            ObservationEffect();
+            DissipateCheck();
         }
 
         //During unfavorable weather conditions, destroy the mist creature.
         public void DissipateCheck()
         {
-            if (!DestroyInProgress)
+            if (DestroyInProgress)
             {
-                if (PawnUtility.EverBeenColonistOrTameAnimal(this))
-                {
-                    var cat = GenSpawn.Spawn(ThingDef.Named("HPLovecraft_CatRace"), PositionHeld, MapHeld);
-                    cat.SetFaction(Faction.OfPlayer);
-                    Messages.Message("ROM_ItWasACat".Translate(), cat, MessageTypeDefOf.PositiveEvent);
+                return;
+            }
 
-                    DestroyMe();
+            if (PawnUtility.EverBeenColonistOrTameAnimal(this))
+            {
+                var cat = GenSpawn.Spawn(ThingDef.Named("HPLovecraft_CatRace"), PositionHeld, MapHeld);
+                cat.SetFaction(Faction.OfPlayer);
+                Messages.Message("ROM_ItWasACat".Translate(), cat, MessageTypeDefOf.PositiveEvent);
 
-                    return;
-                }
+                DestroyMe();
 
-                if (Downed && !Dead || MapHeld.weatherManager.curWeather != HPLDefOf.Fog ||
-                    PositionHeld.Roofed(MapHeld))
-                {
-                    DestroyMe();
-                }
+                return;
+            }
+
+            if (Downed && !Dead || MapHeld.weatherManager.curWeather != HPLDefOf.Fog ||
+                PositionHeld.Roofed(MapHeld))
+            {
+                DestroyMe();
             }
         }
 
         // Any damage dealt results in the mist creature's dissipation.
         public override void PostApplyDamage(DamageInfo dinfo, float totalDamageDealt)
         {
-            if (totalDamageDealt > 0f)
+            if (!(totalDamageDealt > 0f))
             {
-                if (!DestroyInProgress)
-                {
-                    if (!Dead || !Destroyed)
-                    {
-                        DestroyMe();
-                    }
-                }
+                return;
+            }
+
+            if (DestroyInProgress)
+            {
+                return;
+            }
+
+            if (!Dead || !Destroyed)
+            {
+                DestroyMe();
             }
         }
 
@@ -155,54 +148,62 @@ namespace HPLovecraft
                 var thing2 = GenClosest.ClosestThingReachable(PositionHeld, MapHeld,
                     ThingRequest.ForGroup(ThingRequestGroup.Pawn), PathEndMode.OnCell,
                     TraverseParms.For(this, Danger.Deadly, TraverseMode.PassDoors), 15, predicate);
-                if (thing2 != null && thing2.Position != IntVec3.Invalid)
+                if (thing2 == null || thing2.Position == IntVec3.Invalid)
                 {
-                    if (GenSight.LineOfSight(thing2.Position, PositionHeld, MapHeld))
-                    {
-                        if (thing2 is Pawn target)
-                        {
-                            if (target.RaceProps != null)
-                            {
-                                if (!target.RaceProps.IsMechanoid)
-                                {
-                                    if (!Dead && MapHeld != null)
-                                    {
-                                        if (this.StoringThing() == null && target.RaceProps.Humanlike)
-                                        {
-                                            if (target?.story?.traits?.GetTrait(HPLDefOf.PsychicSensitivity) is Trait
-                                                psy && psy.Degree > -1)
-                                            {
-                                                Thought_MemoryObservation thought_MemoryObservation;
-                                                thought_MemoryObservation =
-                                                    (Thought_MemoryObservation) ThoughtMaker.MakeThought(
-                                                        DefDatabase<ThoughtDef>.GetNamed(
-                                                            "ROM_ObservedMistCreaturePsychic"));
-                                                thought_MemoryObservation.Target = this;
-                                                target.needs.mood.thoughts.memories.TryGainMemory(
-                                                    thought_MemoryObservation);
-                                            }
-                                            else
-                                            {
-                                                Thought_MemoryObservation thought_MemoryObservation;
-                                                thought_MemoryObservation =
-                                                    (Thought_MemoryObservation) ThoughtMaker.MakeThought(
-                                                        DefDatabase<ThoughtDef>.GetNamed("ROM_ObservedMistCreature"));
-                                                thought_MemoryObservation.Target = this;
-                                                target.needs.mood.thoughts.memories.TryGainMemory(
-                                                    thought_MemoryObservation);
-                                            }
-                                        }
+                    return;
+                }
 
-                                        Utility.ApplySanityLoss(target, 0.003f, 0.8f);
-                                    }
-                                }
-                            }
-                        }
+                if (!GenSight.LineOfSight(thing2.Position, PositionHeld, MapHeld))
+                {
+                    return;
+                }
+
+                if (thing2 is not Pawn target)
+                {
+                    return;
+                }
+
+                if (target.RaceProps == null)
+                {
+                    return;
+                }
+
+                if (target.RaceProps.IsMechanoid)
+                {
+                    return;
+                }
+
+                if (Dead || MapHeld == null)
+                {
+                    return;
+                }
+
+                if (this.StoringThing() == null && target.RaceProps.Humanlike)
+                {
+                    if (target.story?.traits?.GetTrait(HPLDefOf.PsychicSensitivity) is {Degree: > -1})
+                    {
+                        var thought_MemoryObservation = (Thought_MemoryObservation) ThoughtMaker.MakeThought(
+                            DefDatabase<ThoughtDef>.GetNamed(
+                                "ROM_ObservedMistCreaturePsychic"));
+                        thought_MemoryObservation.Target = this;
+                        target.needs.mood.thoughts.memories.TryGainMemory(
+                            thought_MemoryObservation);
+                    }
+                    else
+                    {
+                        var thought_MemoryObservation = (Thought_MemoryObservation) ThoughtMaker.MakeThought(
+                            DefDatabase<ThoughtDef>.GetNamed("ROM_ObservedMistCreature"));
+                        thought_MemoryObservation.Target = this;
+                        target.needs.mood.thoughts.memories.TryGainMemory(
+                            thought_MemoryObservation);
                     }
                 }
+
+                Utility.ApplySanityLoss(target, 0.003f, 0.8f);
             }
-            catch (NullReferenceException)
+            catch
             {
+                // ignored
             }
         }
     }

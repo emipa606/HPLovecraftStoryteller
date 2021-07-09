@@ -11,10 +11,10 @@ namespace HPLovecraft
         protected override bool TryExecuteWorker(IncidentParms parms)
         {
             Settings.DebugString("== Enter IncidentWorker_Crows ==");
-            var flavorDesc = "";
-            Thing crow = null;
+            string flavorDesc;
+            Thing crow;
             var rand = Rand.Value;
-            var target = new GlobalTargetInfo();
+            GlobalTargetInfo target;
             if (rand < 0.25f)
             {
                 /*
@@ -56,7 +56,7 @@ namespace HPLovecraft
                 crows.Add(crow);
                 crow.Kill();
                 flavorDesc = "ROM_OmenCrowDesc1".Translate();
-                target = new GlobalTargetInfo(crows.FirstOrDefault(x => x is Pawn y && !y.Dead));
+                target = new GlobalTargetInfo(crows.FirstOrDefault(x => x is Pawn {Dead: false}));
             }
             else if (rand < 0.75f)
             {

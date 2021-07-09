@@ -58,7 +58,7 @@ namespace HPLovecraft
             RCellFinder.TryFindRandomPawnEntryCell(out var loc, (Map) parms.target, CellFinder.EdgeRoadChance_Animal);
             var newThing = PawnGenerator.GeneratePawn(HPLDefOf.HPLovecraft_CatKind_Black);
             var cat = GenSpawn.Spawn(newThing, loc, (Map) parms.target);
-            InteractionWorker_RecruitAttempt.DoRecruit(cat.Map.mapPawns.FreeColonists.FirstOrDefault(), (Pawn) cat, 1f);
+            InteractionWorker_RecruitAttempt.DoRecruit(cat.Map.mapPawns.FreeColonists.FirstOrDefault(), (Pawn) cat);
             flavorDesc = "ROM_OmenCatDesc4".Translate();
             target = new GlobalTargetInfo(cat);
         }
@@ -98,8 +98,9 @@ namespace HPLovecraft
                 cats.Add(GenSpawn.Spawn(newCat, loc, (Map) parms.target));
             }
 
-            foreach (Pawn single in cats)
+            foreach (var thing in cats)
             {
+                var single = (Pawn) thing;
                 single.mindState.mentalStateHandler.TryStartMentalState(MentalStateDefOf.Manhunter);
                 if (newTarget == null)
                 {
@@ -107,8 +108,13 @@ namespace HPLovecraft
                 }
             }
 
-            target = newTarget.Value;
+            if (newTarget != null)
+            {
+                target = newTarget.Value;
+            }
+
             flavorDesc = "ROM_OmenCatDesc2".Translate();
+            target = default;
         }
 
         public void DeadCat(IncidentParms parms, out string flavorDesc, out GlobalTargetInfo target)
